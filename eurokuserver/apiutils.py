@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.utils import timezone
 
 from eurokuserver.control.models import Device, ControlPanel
 from eurokuserver.game.models import Game
@@ -50,7 +51,22 @@ def _get_device_from_request(request):
     return (device, msg)
 
 def _create_price_dict(price):
-    pass
+    return  {'title': price.title,
+             'amount': price.available,
+             'enddate': price.valid_until, # Datetime is not JSON serializable.
+                                           # i10n problem...
+             }
+
+def _create_userprice_dict(gameprice):
+    data_dict = _create_price_dict(gameprice.price)
+    data_dict['key'] = gameprice.key
+    days_to_claim = timezone.now() - gameprice.added
+    if days_to_claim.days() > gameprice.price.must_claim_days_delta:
+        data_dict['days_left'] =  -1
+    else:
+        data_dict['days_left'] = days_to_claim
+    data_dict['clamed'] = gameprice.claimed
+    return data_dict
 
 def _create_pricedetail_dict(price):
     pass

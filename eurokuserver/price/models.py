@@ -1,7 +1,14 @@
 from django.db import models
+from django.utils import timezone
+
 from eurokuserver.control.models import Device
 
 # Create your models here.
+
+class PriceManager(models.Manager):
+    def get_available(self):
+        return self.filter(public=True, valid_until__gte = timezone.now())
+
 class Price(models.Model):
     title = models.CharField(max_length=250)
     event = models.BooleanField()
@@ -11,6 +18,8 @@ class Price(models.Model):
     muste_claim_days_delta = models.SmallIntegerField()
     active = models.BooleanField(default=False)
 
+    objects = PriceManager()
+    
 class DevicePrice(models.Model):
     device = models.ForeignKey(Device)
     price = models.ForeignKey(Price)

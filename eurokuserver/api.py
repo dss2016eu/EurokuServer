@@ -1,9 +1,9 @@
 from django.views.decorators.csrf import csrf_exempt
 
 from .apiutils import _error_response, _get_device_from_request, _correct_response, _get_game_from_request
-from .apiutils import _create_price_dict, _create_pricedetail_dict
+from .apiutils import _create_userprice_dict, _create_pricedetail_dict
 from .game.models import Question, GameQuestionStatus
-from .price.models import DevicePrice
+from .price.models import DevicePrice, Price
 from .price.utils import get_price
 
 @csrf_exempt
@@ -36,21 +36,24 @@ def question(request):
             gamequestion = gamequestion.first()
             question = gamequestion.question
             correct = question.is_correct_answer(answer)
-            return_dict = {'price': False,
-                           'price_desc': '',
-                           'price_key': '',
-                           'correct': False,
-                           'provider': question.provider,
-                           'url': question.url,
-                           'attribution': question.attribution}
-            gamequestion.correct = correct
+            return_dict = {
+                'game_id': '',
+                'price': False,
+                'price_desc': '',
+                'price_key': '',
+                'correct': False,
+                'provider': question.provider,
+                'url': question.url,
+                'attribution': question.attribution}
+            gamequestion.correct = correct            
             gamequestion.save()
             if gamequestion.game.active is False:
                 return _error_response(u'Game is closed')
             if correct:
                 game = gamequestion.game
                 return_dict['correct'] = True
-                correct_count = game.get_correct_answers_count()
+                return_dict['game_id'] = game.id
+                correct_count = game.get_correct_answersc_count()
                 if correct_count == game.points_to_win:
                     game.active = False
                     game.save()
@@ -71,7 +74,7 @@ def prices(request):
     if device is None:
         return _error_response(message)
     prices = DevicePrice.objects.filter(device=device)
-    return _correct_response(map(_create_price_dict, prices))
+    return _correct_response(map(_create_userprice_dict, prices))
 
 def price(request, price_key):
     device, message = _get_device_from_request(request)
@@ -89,15 +92,18 @@ def profile(request):
     device, message = _get_device_from_request(request)
     if device is None:
         return _error_response(message)
-    response_dict = {}
+    response_dict = {'device_id': device.token,
+                     'language': device.language}
     if request.method == 'POST':
-        #save user lang
-        pass
-    else:
-        #get user lang
-        pass
+        lang = request.POST.get('language')
+        if lang is None:
+            return _error_response(u'No language on request')
+        device.language = lang
+        response_dict['language'] = device.language
+        device.save()
     return _correct_response(response_dict)
 
 
 def publicprices(request):
-    pass
+    prices = Price.objects.get_available()
+    return _correct_response(map(_create_price_dict, prices))

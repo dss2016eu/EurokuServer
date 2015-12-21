@@ -72,6 +72,7 @@ class GameQuestionStatus(models.Model):
     def repr_mobile(self):
         data_dict = self.question.repr_mobile()
         data_dict['id'] = self.pk
+        data_dict['game_id'] = self.game.pk
         return data_dict
 
     def save(self, *args, **kwargs):
