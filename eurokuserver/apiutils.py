@@ -65,7 +65,7 @@ def _create_userprice_dict(gameprice):
         data_dict['days_left'] =  -1
     else:
         data_dict['days_left'] = days_to_claim
-    data_dict['clamed'] = gameprice.claimed
+    data_dict['claimed'] = gameprice.claimed
     return data_dict
 
 def _create_pricedetail_dict(price):
