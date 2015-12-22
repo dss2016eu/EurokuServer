@@ -1,3 +1,5 @@
+from random import shuffle
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -31,7 +33,7 @@ class Question(models.Model):
     incorrect_answer_one = models.CharField(max_length=100)
     incorrect_answer_two = models.CharField(max_length=100)
     photo = models.ForeignKey(Photo, blank=True, null=True)
-    order = models.CharField(max_length=3)
+    order = models.CharField(max_length=3, blank=True, null=True)
     lang = models.CharField(max_length=5,choices=LANGUAGES)
     provider = models.CharField(max_length=255, blank=True, null=True)
     url = models.CharField(max_length=255, blank=True, null=True)
@@ -53,14 +55,21 @@ class Question(models.Model):
         if self.photo is not None:
             photo = self.photo.get_mobile_url()
         return {'title': self.title,
-                '1': getattr(self, self.order_to_attr(self.order[0])),
-                '2': getattr(self, self.order_to_attr(self.order[1])),
-                '3': getattr(self, self.order_to_attr(self.order[2])),
+                'answers': [getattr(self, self.order_to_attr(self.order[0])),
+                            getattr(self, self.order_to_attr(self.order[1])),
+                            getattr(self, self.order_to_attr(self.order[2]))],
                 'photo': photo,
                 }
     
     def is_correct_answer(self, order_index):
         return order_index != '-1' and self.order[int(order_index)-1] == '1'
+
+    def save(self, *args, **kwargs):
+        if self.order is not None:
+            a = ['1','2','3']
+            shuffle(a)
+            self.order = ''.join(a)
+        super(Question, self).save(*args, **kwargs)
     
 class GameQuestionStatus(models.Model):
     game = models.ForeignKey(Game)
