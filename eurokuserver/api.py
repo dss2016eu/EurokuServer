@@ -113,7 +113,7 @@ def question(request):
                 game = gamequestion.game
                 return_dict['correct'] = True
                 return_dict['game_id'] = game.id
-                correct_count = game.get_correct_answersc_count()
+                correct_count = game.get_correct_answers_count()
                 if correct_count == game.points_to_win:
                     game.active = False
                     game.save()
