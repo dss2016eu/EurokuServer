@@ -120,7 +120,7 @@ def question(request):
                     game.active = False
                     game.save()
                     # Get price
-                    deviceprice = get_price()
+                    deviceprice = get_price(device)
                     return_dict['price'] = True
                     return_dict['price_desc'] = u''
                     return_dict['price_key'] = deviceprice.key
