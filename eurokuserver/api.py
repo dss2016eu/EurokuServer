@@ -3,6 +3,7 @@ try:
     django.setup()
 except:
     pass
+import json
 from django.views.decorators.csrf import csrf_exempt
 
 from .apiutils import _error_response, _get_device_from_request, _correct_response, _get_game_from_request
@@ -83,10 +84,11 @@ def question(request):
             else:
                 return _error_response(u'No question matching criteria')
     if request.method == 'POST':
-        question_id = request.POST.get('question_id')
+        data = json.loads(request.body)
+        question_id = data.get('question_id')
         if question_id is None:
             return _error_response(u'No question_id on request')
-        answer = request.POST.get('answer')
+        answer = data.get('answer')
         if answer is None:
             return _error_response(u'No answer in response')
         gamequestion = GameQuestionStatus.objects.filter(id=question_id)
@@ -240,7 +242,8 @@ def profile(request):
     response_dict = {'device_id': device.token,
                      'language': device.language}
     if request.method == 'POST':
-        lang = request.POST.get('language')
+        data = json.loads(request.body)
+        lang = data.get('language')
         if lang is None:
             return _error_response(u'No language on request')
         device.language = lang

@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from django.utils import timezone
 
@@ -15,7 +17,6 @@ def _json_serializable_datetime(device, date):
             '%Y-%M-%d',
             )
         )
-    
 
 def _error_response(msg):
     return JsonResponse({'error': True, 'message': msg})
@@ -29,7 +30,8 @@ def _get_game_from_request(request, device):
     if request.method == 'GET':
         game_id = request.GET.get('game_id')
     if request.method == 'POST':
-        game_id = request.POST.get('game_id')        
+        data = json.loads(request.body)
+        game_id = data.get('game_id')        
     if game_id is None:
         if request.method == 'GET':
             cp = ControlPanel.objects.all()[0]
@@ -52,7 +54,8 @@ def _get_device_from_request(request):
     if request.method == 'GET':
         device_id = request.GET.get('device_id')
     if request.method == 'POST':
-        device_id = request.POST.get('device_id')
+        data = json.loads(request.body)
+        device_id = data.get('device_id')
     if device_id is None:
         msg = u'No device_id on request'
     else:
