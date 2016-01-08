@@ -82,6 +82,8 @@ class GameQuestionStatus(models.Model):
         data_dict = self.question.repr_mobile()
         data_dict['id'] = self.pk
         data_dict['game_id'] = self.game.pk
+        data_dict['round'] = self.game.get_correct_answers_count() + 1
+        data_dict['rounds'] = self.game.points_to_win
         return data_dict
 
     def save(self, *args, **kwargs):

@@ -32,7 +32,9 @@ def question(request):
              "game_id": 109,
              "id": 101,
              "answers": ["TAKET", "AINGERU", "GOMUTAPEN"],
-             "title": "'Aingeru-belarraren lorea' Bizkaian"
+             "title": "'Aingeru-belarraren lorea' Bizkaian",
+             "round": 1,
+             "rounds": 16,
              }
                 
         :query device_id: Gailuaren tokena
