@@ -1,6 +1,6 @@
 import json
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
 
 from eurokuserver.control.models import Device, ControlPanel
@@ -17,12 +17,20 @@ def _json_serializable_datetime(device, date):
             '%Y-%M-%d',
             )
         )
+def _cors_response(response=None):
+    if response is None:
+        response = HttpResponse()
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Access-Control-Allow-Methods'] = 'GET,POST'
+    response['Access-Control-Allow-Headers'] = 'Content-Type'
+    return response
 
 def _error_response(msg):
     return JsonResponse({'error': True, 'message': msg})
 
 def _correct_response(data_dict):
-    return JsonResponse(data_dict, safe=False)
+    response = JsonResponse(data_dict, safe=False)
+    return _cors_response(response)
 
 def _get_game_from_request(request, device):
     game = None

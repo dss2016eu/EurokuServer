@@ -6,7 +6,7 @@ except:
 import json
 from django.views.decorators.csrf import csrf_exempt
 
-from .apiutils import _error_response, _get_device_from_request, _correct_response, _get_game_from_request
+from .apiutils import _error_response, _get_device_from_request, _correct_response, _get_game_from_request, _cors_response
 from .apiutils import _create_userprice_dict, _create_pricedetail_dict, _create_price_dict
 from .game.models import Question, GameQuestionStatus
 from .price.models import DevicePrice, Price
@@ -69,6 +69,8 @@ def question(request):
         :query answer: erantzunaren zenbakia
             
     """
+    if request.method == 'OPTIONS':
+        return _cors_response()
     device, message = _get_device_from_request(request)
     if device is None:
         return _error_response(message)
