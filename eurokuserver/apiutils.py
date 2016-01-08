@@ -53,9 +53,11 @@ def _get_device_from_request(request):
     msg = ''
     if request.method == 'GET':
         device_id = request.GET.get('device_id')
-    if request.method == 'POST':
+    elif request.method == 'POST':
         data = json.loads(request.body)
         device_id = data.get('device_id')
+    else:
+        device_id = None 
     if device_id is None:
         msg = u'No device_id on request'
     else:
