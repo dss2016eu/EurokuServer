@@ -109,8 +109,8 @@ def question(request):
             gamequestion.save()
             if gamequestion.game.active is False:
                 return _error_response(u'Game is closed')
+            game = gamequestion.game
             if correct:
-                game = gamequestion.game
                 return_dict['correct'] = True
                 return_dict['game_id'] = game.id
                 correct_count = game.get_correct_answers_count()
