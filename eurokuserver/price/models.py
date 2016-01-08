@@ -7,7 +7,7 @@ from eurokuserver.control.models import Device
 
 class PriceManager(models.Manager):
     def get_available(self):
-        return self.filter(public=True, valid_until__gte = timezone.now())
+        return self.filter(active=True, valid_until__gte = timezone.now())
 
 class Price(models.Model):
     title = models.CharField(max_length=250)
