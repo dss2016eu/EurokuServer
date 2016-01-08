@@ -8,7 +8,7 @@ def _error_response(msg):
     return JsonResponse({'error': True, 'message': msg})
 
 def _correct_response(data_dict):
-    return JsonResponse(data_dict)
+    return JsonResponse(data_dict, safe=False)
 
 def _get_game_from_request(request, device):
     game = None
@@ -54,7 +54,7 @@ def _create_price_dict(price):
     return  {'title': price.title,
              'amount': price.available,
              'enddate': price.valid_until, # Datetime is not JSON serializable.
-                                           # i10n problem...
+                                           # i10n problem...o
              }
 
 def _create_userprice_dict(gameprice):
