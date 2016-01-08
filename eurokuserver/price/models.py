@@ -19,11 +19,23 @@ class Price(models.Model):
     active = models.BooleanField(default=False)
 
     objects = PriceManager()
-    
+
+    def __unicode__(self):
+        return self.title
+        
 class DevicePrice(models.Model):
     device = models.ForeignKey(Device)
     price = models.ForeignKey(Price)
     key = models.CharField(max_length=30)
     claimed = models.BooleanField(default=False)
     added = models.DateTimeField(auto_now_add=True)
+
+    #####
+    # used in admin site
+    #####
+    def price_title(self):
+        return self.price.title
+
+    def device_token(self):
+        return self.device.token
     
