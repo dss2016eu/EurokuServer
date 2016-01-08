@@ -274,4 +274,5 @@ def publicprices(request):
 
     """
     prices = Price.objects.get_available()
+    
     return _correct_response(map(_create_price_dict, prices))

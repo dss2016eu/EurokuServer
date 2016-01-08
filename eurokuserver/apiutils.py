@@ -4,6 +4,19 @@ from django.utils import timezone
 from eurokuserver.control.models import Device, ControlPanel
 from eurokuserver.game.models import Game
 
+def _json_serializable_datetime(device, date):
+    FORMAT_DICT = {'es': '%d-%M-%Y',
+                   'eu': '%Y-%M-%d',
+                   }
+    lang = device and device.language or 'eu'
+    return date.strftime(
+        FORMAT_DICT.get(
+            lang,
+            '%Y-%M-%d',
+            )
+        )
+    
+
 def _error_response(msg):
     return JsonResponse({'error': True, 'message': msg})
 
@@ -50,21 +63,25 @@ def _get_device_from_request(request):
             msg = u'No device registered whit this id'
     return (device, msg)
 
-def _create_price_dict(price):
+def _create_price_dict(price, device=None):
     return  {'title': price.title,
              'amount': price.available,
-             'enddate': price.valid_until, # Datetime is not JSON serializable.
-                                           # i10n problem...o
+             'enddate': _json_serializable_datetime(
+                 device,
+                 price.valid_until
+                 ), 
              }
 
 def _create_userprice_dict(gameprice):
-    data_dict = _create_price_dict(gameprice.price)
+    device = gameprice.device
+    data_dict = _create_price_dict(gameprice.price, device)
     data_dict['key'] = gameprice.key
-    days_to_claim = timezone.now() - gameprice.added
-    if days_to_claim.days() > gameprice.price.must_claim_days_delta:
+    days_passed = (timezone.now() - gameprice.added).days
+    days_to_claim = gameprice.price.must_claim_days_delta
+    if days_passed > days_to_claim:
         data_dict['days_left'] =  -1
     else:
-        data_dict['days_left'] = days_to_claim
+        data_dict['days_left'] = days_to_claim - days_passed
     data_dict['claimed'] = gameprice.claimed
     return data_dict
 

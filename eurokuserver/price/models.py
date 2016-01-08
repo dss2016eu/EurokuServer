@@ -15,7 +15,7 @@ class Price(models.Model):
     total = models.SmallIntegerField()
     available = models.SmallIntegerField()
     valid_until = models.DateField()
-    muste_claim_days_delta = models.SmallIntegerField()
+    must_claim_days_delta = models.SmallIntegerField()
     active = models.BooleanField(default=False)
 
     objects = PriceManager()
