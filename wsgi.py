@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.abspath(os.path.join('..',os.path.dirname(__file__))))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                'eurokuserver')))
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eurokuserver.settings")
