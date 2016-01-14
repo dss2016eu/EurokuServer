@@ -200,6 +200,7 @@ def price(request, price_key):
         price = price.first()
     return _correct_response(_create_pricedetail_dict(price))
 
+@csrf_exempt
 def profile(request):
     """
     .. http:get:: /api/1.0/profile
