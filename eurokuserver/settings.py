@@ -82,7 +82,8 @@ WSGI_APPLICATION = 'eurokuserver.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'default_db',
+        'USER': 'root',
     }
 }
 
@@ -105,6 +106,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = '/srv/data/web/vhosts/default/media'
+MEDIA_URL = '/media/'
 
 SITE_ID = 1
 
