@@ -5,6 +5,7 @@ except:
     pass
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_control
 
 from .apiutils import _error_response, _get_device_from_request, _correct_response, _get_game_from_request, _cors_response
 from .apiutils import _create_userprice_dict, _create_pricedetail_dict, _create_price_dict
@@ -12,6 +13,7 @@ from .game.models import Question, GameQuestionStatus
 from .price.models import DevicePrice, Price
 from .price.utils import get_price
 
+@cache_control(private=True)
 @csrf_exempt
 def question(request):
     """
@@ -200,6 +202,7 @@ def price(request, price_key):
         price = price.first()
     return _correct_response(_create_pricedetail_dict(price))
 
+@cache_control(private=True)
 @csrf_exempt
 def profile(request):
     """
