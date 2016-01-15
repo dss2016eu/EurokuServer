@@ -289,6 +289,7 @@ def publicprices(request):
     
     return _correct_response(map(_create_price_dict, prices))
 
+@cache_control(private=True)
 def register(request):
     language = request.GET.get('language', 'eu')
     device = Device.objects.new(language=language)
