@@ -12,6 +12,7 @@ from .apiutils import _create_userprice_dict, _create_pricedetail_dict, _create_
 from .game.models import Question, GameQuestionStatus
 from .price.models import DevicePrice, Price
 from .price.utils import get_price
+from .control.models import Device
 
 @cache_control(private=True)
 @csrf_exempt
@@ -287,3 +288,8 @@ def publicprices(request):
     prices = Price.objects.get_available()
     
     return _correct_response(map(_create_price_dict, prices))
+
+def register(request):
+    language = request.GET.get('language', 'eu')
+    device = Device.objects.new(language=language)
+    return _correct_response({'device_id': device.token})

@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^api/1.0/prices', api.prices, name="euroku_prices"),
     url(r'^api/1.o/prices/(P<price_key>[A-B0-9]+)', api.price, name="euroku_price"),
     url(r'^api/1.0/profile', api.profile, name="euroku_profile"),
+    url(r'^api/1.0/register', api.register, name="euroku_register"),
     url(r'^admin/', include(admin.site.urls)),
 ]
