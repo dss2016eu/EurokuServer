@@ -21,7 +21,7 @@ def _cors_response(response=None):
     if response is None:
         response = HttpResponse()
     response['Access-Control-Allow-Origin'] = '*'
-    response['Access-Control-Allow-Methods'] = 'GET,POST'
+    response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     response['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
