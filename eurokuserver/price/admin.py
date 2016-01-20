@@ -4,7 +4,7 @@ from .models import Price, DevicePrice
 @admin.register(Price)
 class PriceAdmin(admin.ModelAdmin):
     date_hierarchy = "valid_until"
-    list_display = ('title', 'event', 'total', 'available', 'valid_until', 'active')
+    list_display = ('title_eu', 'event', 'total', 'available', 'valid_until', 'active')
 
 @admin.register(DevicePrice)
 class DevicePriceAdmin(admin.ModelAdmin):

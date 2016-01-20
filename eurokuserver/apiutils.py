@@ -7,6 +7,8 @@ from eurokuserver.control.models import Device, ControlPanel
 from eurokuserver.game.models import Game
 
 def _json_serializable_datetime(device, date):
+    if date is None:
+        return u''
     FORMAT_DICT = {'es': '%d-%M-%Y',
                    'eu': '%Y-%M-%d',
                    }
@@ -77,11 +79,18 @@ def _get_device_from_request(request):
     return (device, msg)
 
 def _create_price_dict(price, device=None):
-    return  {'title': price.title,
+    if device is not None:
+        lang = device.language
+    else:
+        lang = None
+    return  {'title': price.get_title(lang),
+             'url': price.get_url(lang),
+             'event': price.event,
+             'date': price.valid_until,
              'amount': price.available,
              'enddate': _json_serializable_datetime(
                  device,
-                 price.valid_until
+                 price.get_last_date_to_claim()
                  ), 
              }
 
@@ -97,7 +106,5 @@ def _create_userprice_dict(gameprice):
         data_dict['days_left'] = days_to_claim - days_passed
     data_dict['claimed'] = gameprice.claimed
     return data_dict
-
-def _create_pricedetail_dict(price):
-    pass
+    
 

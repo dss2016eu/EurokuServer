@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.utils import timezone
 
@@ -10,18 +12,39 @@ class PriceManager(models.Manager):
         return self.filter(active=True, valid_until__gte = timezone.now())
 
 class Price(models.Model):
-    title = models.CharField(max_length=250)
+    title_eu = models.CharField(max_length=250)
+    title_es = models.CharField(max_length=250)
+    title_en = models.CharField(max_length=250)
+    url_eu = models.CharField(max_length=250)
+    url_es = models.CharField(max_length=250)
+    url_en = models.CharField(max_length=250)
     event = models.BooleanField()
     total = models.SmallIntegerField()
     available = models.SmallIntegerField()
-    valid_until = models.DateField()
-    must_claim_days_delta = models.SmallIntegerField()
+    valid_until = models.DateField('Noiz da ebentoa?')
+    must_claim_days_delta = models.SmallIntegerField('Ez da ebentoa: zenbat egun iraungi arte?')
     active = models.BooleanField(default=False)
 
     objects = PriceManager()
 
+    def get_title(self, lang=None):
+        if lang is None:
+            return self.title_eu
+        else:
+            return getattr(self, 'title_{0}'.format(lang), self.title_eu)
+
+    def get_url(self, lang=None):
+        if lang is None:
+            return self.url_eu
+        else:
+            return getattr(self, 'url_{0}'.format(lang), self.url_eu)
+        
+    def get_last_date_to_claim(self):
+        if self.event:
+            return self.event - datetime.timedelta(days=1)
+        
     def __unicode__(self):
-        return self.title
+        return self.get_title()
         
 class DevicePrice(models.Model):
     device = models.ForeignKey(Device)
@@ -34,7 +57,7 @@ class DevicePrice(models.Model):
     # used in admin site
     #####
     def price_title(self):
-        return self.price.title
+        return self.price.get_title()
 
     def device_token(self):
         return self.device.token
