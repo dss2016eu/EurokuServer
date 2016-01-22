@@ -128,7 +128,7 @@ def question(request):
                     # Get price
                     deviceprice = get_price(device)
                     return_dict['price'] = True
-                    return_dict['price_desc'] = u''
+                    return_dict['price_desc'] = deviceprice.price.get_title(lang=device.language)
                     return_dict['price_key'] = deviceprice.key
             else:
                 game.active = False
