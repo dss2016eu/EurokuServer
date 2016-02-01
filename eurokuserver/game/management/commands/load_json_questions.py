@@ -70,7 +70,7 @@ class Command(BaseCommand):
             data = json.loads(f.read())
             for question in data:
                 q = Question.objects.create(title=question.get('title'),
-                                            correct_answer=question.get('correct')
+                                            correct_answer=question.get('correct'),
                                             incorrect_answer_one=question.get('incorrect_answer_one'),
                                             incorrect_answer_two=question.get('incorrect_answer_two'),
                                             lang=language,
