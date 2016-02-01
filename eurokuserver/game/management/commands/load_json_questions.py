@@ -70,6 +70,7 @@ class Command(BaseCommand):
             data = json.loads(f.read())
             for question in data:
                 q = Question.objects.create(title=question.get('title'),
+                                            correct_answer=question.get('correct')
                                             incorrect_answer_one=question.get('incorrect_answer_one'),
                                             incorrect_answer_two=question.get('incorrect_answer_two'),
                                             lang=language,
@@ -78,7 +79,7 @@ class Command(BaseCommand):
                                             attribution=question.get('attribution'),
                                             public=True,
                                             reviewed=True,)            
-                if question.get('photo_url', None) is None:
+                if question.get('photo_url', None) is not None:
                     photo = get_photo_from_url(question.get(question.get('photo_url')))
                     if photo is not None:
                         q.photo = photo
