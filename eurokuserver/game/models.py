@@ -65,7 +65,7 @@ class Question(models.Model):
         return order_index != '-1' and self.order[int(order_index)-1] == '1'
 
     def save(self, *args, **kwargs):
-        if self.order is not None:
+        if self.order is None:
             a = ['1','2','3']
             shuffle(a)
             self.order = ''.join(a)
