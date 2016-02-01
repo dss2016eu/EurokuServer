@@ -1,5 +1,7 @@
 import json
 import requests
+import random
+import string
 from cStringIO import StringIO
 try:
     from PIL import Image
@@ -25,9 +27,12 @@ def get_photo_from_url(url='', title='', tags='', format='jpg', slug=''):
     if not response.status_code == 200:
         return None
     image = response.content
-    
+    N=10
+    title = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
+    slug = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
+                   
     try:
-        photo = load_photo_from_raw_data(title[:100], tags, slug, format, image)
+        photo = load_photo_from_raw_data(title, tags, slug, format, image)
     except Exception, e:
         print 'Errorea irudi honekin RGB', title, e
         return None
@@ -39,7 +44,7 @@ def load_photo_from_raw_data(title, tags, slug, image_format, image):
         photo = Photo()
         photo.title = title
         photo.tags=tags
-        photo. slug=slug
+        photo.slug=slug
     else:
         photo = photo[0]
     image_t = Image.open(ContentFile(image))
@@ -53,6 +58,8 @@ def load_photo_from_raw_data(title, tags, slug, image_format, image):
     try:
         photo.save()
     except Exception, e:
+        import pdb;pdb.set_trace()
+        
         print 'Errorea irudi honekin', title, e
     return photo
 
@@ -78,11 +85,11 @@ class Command(BaseCommand):
                                             url=question.get('url'),
                                             attribution=question.get('attribution'),
                                             public=True,
-                                            reviewed=True,)            
+                                            reviewed=True,)                  
                 if question.get('photo_url', None) is not None:
-                    photo = get_photo_from_url(question.get(question.get('photo_url')))
+                    photo = get_photo_from_url(url=question.get('photo_url'))
                     if photo is not None:
                         q.photo = photo
-                
+                        q.save()
                                                
                     
