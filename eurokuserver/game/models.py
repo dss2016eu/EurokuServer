@@ -53,7 +53,7 @@ class Question(models.Model):
     def repr_mobile(self):
         photo = ''
         if self.photo is not None:
-            photo = self.photo.get_mobile_url()
+            photo = self.photo.get_display_url()
         return {'title': self.title,
                 'answers': [getattr(self, self.order_to_attr(self.order[0])),
                             getattr(self, self.order_to_attr(self.order[1])),
