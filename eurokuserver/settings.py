@@ -113,7 +113,7 @@ MEDIA_ROOT = '/srv/data/web/vhosts/default/media'
 MEDIA_URL = '/media/'
 
 SITE_ID = 1
-
+LOGIN_URL = '/login'
 try:
     from local_settings import *
 except:

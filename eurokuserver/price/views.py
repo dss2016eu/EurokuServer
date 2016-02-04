@@ -25,4 +25,3 @@ def search(request):
             alert_message = "Gako horri dagokion banatu gabeko saririk ez dago"
             claim_checkbox = False
     return render(request, 'sariak.html', context=locals())
-        
