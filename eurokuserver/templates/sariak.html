@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="" >
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="key">Sartu sariaren kodea</label>
+    <input type="text" name="key" id="price-key-input" {% if price_key %}value={{ price_key }}{% endif %} />
+    <p class="help-block">Kodeak letra larri eta zenbakiz soilik osatuta daude.</p>
+  </div>
+  
+  {% if claim_checkbox %}
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" name="claim">Esleitu
+    </label>
+  </div>
+  {% endif %}
+  <input type="submit" class="btn btn-lg btn-primary" type="button" value="Bidali"/>
+  </div>
+</form>
+{% endblock %}

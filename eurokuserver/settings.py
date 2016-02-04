@@ -23,14 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'q4=p0-7_qe5rfopsx_ye&8c4wbga97+vs50m9-%@yub#dlx^+y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['euroku.codesyntax.com',]
 
 
 # Application definition
 
 INSTALLED_APPS = (
+    'eurokuserver',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +43,7 @@ INSTALLED_APPS = (
     'eurokuserver.game',
     'eurokuserver.price',
     'eurokuserver.control',
-)
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

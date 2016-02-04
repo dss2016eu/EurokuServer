@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from . import api
+from price import views as price_views
 
 urlpatterns = [
     url(r'^api/1.0/galdera', api.question, name="euroku_question"),
@@ -25,5 +26,6 @@ urlpatterns = [
     url(r'^api/1.0/prices$', api.prices, name="euroku_prices"),
     url(r'^api/1.0/profile', api.profile, name="euroku_profile"),
     url(r'^api/1.0/register', api.register, name="euroku_register"),
+    url(r'^sariak', price_views.search, name="euroku_search"),
     url(r'^admin/', include(admin.site.urls)),
 ]
