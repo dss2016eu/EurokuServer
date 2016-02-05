@@ -136,7 +136,8 @@ def question(request):
             return _correct_response(return_dict)
         else:
             return _error_response(u'No matching question')
-
+        
+@cache_control(private=True)
 def prices(request):
     """ All user prices """
     device, message = _get_device_from_request(request)
@@ -145,6 +146,7 @@ def prices(request):
     prices = DevicePrice.objects.filter(device=device)
     return _correct_response(map(_create_userprice_dict, prices))
 
+@cache_control(private=True)
 def price(request, price_key):
     """ User price detail """
     device, message = _get_device_from_request(request)
@@ -158,6 +160,7 @@ def price(request, price_key):
         price = price.first()
     return _correct_response(_create_userprice_dict(price))
 
+@cache_control(private=True)
 def publicprices(request):
     """ All prices """
     device, message = _get_device_from_request(request)
@@ -165,7 +168,6 @@ def publicprices(request):
         return _error_response(message)
     prices = Price.objects.get_available()
     return _correct_response([_create_price_dict(p, device) for p in prices])
-
 
 @cache_control(private=True)
 @csrf_exempt
