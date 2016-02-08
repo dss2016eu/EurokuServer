@@ -101,7 +101,7 @@ def _create_userprice_dict(gameprice):
     data_dict = _create_price_dict(gameprice.price, device)
     data_dict['key'] = gameprice.key
     data_dict['claimed'] = gameprice.claimed
-    if gameprice.pice.event is True:
+    if gameprice.price.event is True:
         data_dict['last_day_to_claim'] = data_dict['enddate']
     else:
         max_days_to_claim = getattr(settings, 'EUROKU_MAX_DAYS_TO_CLAIM', 10)
