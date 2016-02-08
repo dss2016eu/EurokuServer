@@ -4,7 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 sys.path.insert(0, os.path.abspath(os.path.join('..',os.path.dirname(__file__))))
-sys.path.insert(0, os.path.abspath('/srv/data/web/vhosts/default/eurokuserver/'))
+sys.path.insert(0, os.path.abspath('/srv/data/web/vhosts/default/'))
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
