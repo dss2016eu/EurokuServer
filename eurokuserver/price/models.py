@@ -22,7 +22,6 @@ class Price(models.Model):
     total = models.SmallIntegerField()
     available = models.SmallIntegerField()
     valid_until = models.DateField('Noiz da ebentoa?')
-    must_claim_days_delta = models.SmallIntegerField('Ez da ebentoa: zenbat egun iraungi arte?')
     active = models.BooleanField(default=False)
 
     objects = PriceManager()

@@ -1,7 +1,8 @@
 import json
+import datetime
 
 from django.http import JsonResponse, HttpResponse
-from django.utils import timezone
+from django.conf import settings
 
 from eurokuserver.control.models import Device, ControlPanel
 from eurokuserver.game.models import Game
@@ -9,14 +10,14 @@ from eurokuserver.game.models import Game
 def _json_serializable_datetime(device, date):
     if date is None:
         return u''
-    FORMAT_DICT = {'es': '%d-%M-%Y',
-                   'eu': '%Y-%M-%d',
+    FORMAT_DICT = {'es': '%d-%m-%Y',
+                   'eu': '%Y-%m-%d',
                    }
     lang = device and device.language or 'eu'
     return date.strftime(
         FORMAT_DICT.get(
             lang,
-            '%Y-%M-%d',
+            '%Y-%m-%d',
             )
         )
 def _cors_response(response=None):
@@ -28,7 +29,8 @@ def _cors_response(response=None):
     return response
 
 def _error_response(msg):
-    return JsonResponse({'error': True, 'message': msg})
+    response = JsonResponse({'error': True, 'message': msg})
+    return _cors_response(response)
 
 def _correct_response(data_dict):
     response = JsonResponse(data_dict, safe=False)
@@ -98,13 +100,12 @@ def _create_userprice_dict(gameprice):
     device = gameprice.device
     data_dict = _create_price_dict(gameprice.price, device)
     data_dict['key'] = gameprice.key
-    days_passed = (timezone.now() - gameprice.added).days
-    days_to_claim = gameprice.price.must_claim_days_delta
-    if days_passed > days_to_claim:
-        data_dict['days_left'] =  -1
-    else:
-        data_dict['days_left'] = days_to_claim - days_passed
     data_dict['claimed'] = gameprice.claimed
+    if gameprice.pice.event is True:
+        data_dict['last_day_to_claim'] = data_dict['enddate']
+    else:
+        max_days_to_claim = getattr(settings, 'EUROKU_MAX_DAYS_TO_CLAIM', 10)
+        data_dict['last_day_to_claim'] = gameprice.added + datetime.timedelta(days=max_days_to_claim)
     return data_dict
     
 
