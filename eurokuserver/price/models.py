@@ -41,7 +41,7 @@ class Price(models.Model):
         
     def get_last_date_to_claim(self):
         if self.event:
-            return self.event - datetime.timedelta(days=1)
+            return self.valid_until - datetime.timedelta(days=1)
         
     def __unicode__(self):
         return self.get_title()
