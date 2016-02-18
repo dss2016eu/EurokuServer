@@ -4,7 +4,7 @@ import uuid
 
 LANGUAGES = (('es', 'Español'),
              ('eu', 'Euskara'),
-             ('pl', 'Polako'))
+             ('en', 'English'))
 
 # Create your models here.
 class ControlPanel(models.Model):
