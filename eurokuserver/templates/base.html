@@ -15,7 +15,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Euroku sari banaketa</h1>
+    <h1>{% block heading %}Euroku sari banaketa{% endblock %}</h1>
     {% if view_message %}
     <div class="alert alert-success" role="alert">
       {{ view_message }}

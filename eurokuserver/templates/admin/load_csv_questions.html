@@ -1,11 +1,20 @@
 {% extends "base.html" %}
+{% block heading %} Galdera karga{% endblock %}
 {% block content %}
 <form method="post" action="" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="file">CSV fitxategia</label>
     <input type="file" name="file" id="csv-input-file"/>
-    <p class="help-block">Hemen csv-ari buruzko azalpena</p>
+    <p class="help-block">
+      CSV fitxategiak derrigorrezko zutabe hauek izan behar ditu (hurrenkera honetan):
+      galdera, erantzun zuzena, erantzun okerra 1, erantzun okerra 2, hizkuntza (eu,es,en), jatorria
+    </p>
+    <p clasS="help-block">
+      Hauetaz gain bi zutabe gehigarri izan ditzazke:
+      Aitortza, argazkiaren url-a
+      Azken bi zutabe hauetakoren bat http-z hasten bada, argazki url-a dela suposatuko da, aitortza testua bestela
+    </p>
   </div>
   <input type="submit" class="btn btn-lg btn-primary" type="button" value="Bidali"/>
 </form>
