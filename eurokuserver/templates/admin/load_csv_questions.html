@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="file">CSV fitxategia</label>
+    <input type="file" name="file" id="csv-input-file"/>
+    <p class="help-block">Hemen csv-ari buruzko azalpena</p>
+  </div>
+  <input type="submit" class="btn btn-lg btn-primary" type="button" value="Bidali"/>
+</form>
+{% endblock %}
