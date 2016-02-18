@@ -1,5 +1,6 @@
 import random
 import string
+import datetime
 
 from django.conf import settings
 from .models import Price, DevicePrice
@@ -14,8 +15,9 @@ def get_price(device):
     # azkarren iraungitzen den ebentutik banatu saria
     # Ebenturik ez baldin badago, saria beste guztien
     # artean aukeratu eta randon bat egin
+    day = datetime.timedelta(days=1)
     prices = Price.objects.filter(active=True, available__gt=0)
-    events = prices.filter(event=True).order_by('-valid_until')
+    events = prices.filter(event=True, valid_until__gte=datetime.date.today()).order_by('-valid_until')
     if events.exists():
         price = events.first()
     else:
