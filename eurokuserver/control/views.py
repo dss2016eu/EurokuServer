@@ -33,7 +33,7 @@ def add_questions(request):
         for row in reader:    
             if kont != 0:
                 mandatory = row[:7]
-                optional = row[8:]
+                optional = row[7:]
                 try:
                     title, correct, incorrect_one, incorrect_two, language, provider, url = mandatory
                 except:
