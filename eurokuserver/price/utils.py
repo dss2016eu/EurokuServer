@@ -17,7 +17,7 @@ def get_price(device):
     # artean aukeratu eta randon bat egin
     day = datetime.timedelta(days=1)
     prices = Price.objects.filter(active=True, available__gt=0)
-    events = prices.filter(event=True, valid_until__gte=datetime.date.today()).order_by('-valid_until')
+    events = prices.filter(event=True, valid_until__gte=datetime.date.today() + day).order_by('-valid_until')
     if events.exists():
         price = events.first()
     else:
