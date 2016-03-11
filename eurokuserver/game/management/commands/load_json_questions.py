@@ -71,20 +71,24 @@ class Command(BaseCommand):
         parser.add_argument('-t','--title', dest='title', default=None, nargs='?', type=str)
         parser.add_argument('-p','--provider', dest='provider', default=None, nargs='?', type=str)
         parser.add_argument('-u','--url', dest='url', default=None, nargs='?', type=str)
+        parser.add_argument('-m','--max', dest='limit', default=None, args='?', type=int)
         
     def handle(self, *args, **options):
         filename = options.get('json_file', None)
         language = options.get('language', 'eu')
-        title = options.get('title', None)
-        provider = options.get('provider', None)
-        url = options.get('url', None)
+        ptitle = options.get('title', None)
+        pprovider = options.get('provider', None)
+        purl = options.get('url', None)
+        limit = options.get('limit', None)
         
         with open(filename) as f:
             data = json.loads(f.read())
+            if limit is not None:
+                data = data[:limit]
             for question in data:
-                title = title or question.get('title')
-                provider = provider or question.get('provider')
-                url = url or question.get('url')
+                title = ptitle or question.get('title')
+                provider = pprovider or question.get('provider')
+                url = purl or question.get('url')
                 q = Question.objects.create(title=title,
                                             correct_answer=question.get('correct'),
                                             incorrect_answer_one=question.get('incorrect_answer_one'),
