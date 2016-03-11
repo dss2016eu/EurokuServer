@@ -71,7 +71,7 @@ class Command(BaseCommand):
         parser.add_argument('-t','--title', dest='title', default=None, nargs='?', type=str)
         parser.add_argument('-p','--provider', dest='provider', default=None, nargs='?', type=str)
         parser.add_argument('-u','--url', dest='url', default=None, nargs='?', type=str)
-        parser.add_argument('-m','--max', dest='limit', default=None, args='?', type=int)
+        parser.add_argument('-m','--max', dest='limit', default=None, nargs='?', type=int)
         
     def handle(self, *args, **options):
         filename = options.get('json_file', None)
