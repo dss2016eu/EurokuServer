@@ -106,6 +106,7 @@ def _create_userprice_dict(gameprice):
     else:
         max_days_to_claim = getattr(settings, 'EUROKU_MAX_DAYS_TO_CLAIM', 10)
         data_dict['last_day_to_claim'] = gameprice.added + datetime.timedelta(days=max_days_to_claim)
+        data_dict['enddate'] = data_dict['last_day_to_claim']
     return data_dict
     
 
