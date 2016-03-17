@@ -85,16 +85,12 @@ def _create_price_dict(price, device=None):
         lang = device.language
     else:
         lang = None
-    return  {'title': price.get_title(lang),
-             'url': price.get_url(lang),
-             'event': price.event,
-             'date': price.valid_until,
-             'amount': price.available,
-             'enddate': _json_serializable_datetime(
-                 device,
-                 price.get_last_date_to_claim()
-                 ), 
-             }
+    return {'title': price.get_title(lang),
+            'url': price.get_url(lang),
+            'event': price.event,
+            'date': price.valid_until,
+            'amount': price.available,
+            'enddate': price.valid_until}
 
 def _create_userprice_dict(gameprice):
     device = gameprice.device
@@ -102,7 +98,10 @@ def _create_userprice_dict(gameprice):
     data_dict['key'] = gameprice.key
     data_dict['claimed'] = gameprice.claimed
     if gameprice.price.event is True:
-        data_dict['last_day_to_claim'] = data_dict['enddate']
+        data_dict['last_day_to_claim'] = _json_serializable_datetime(
+                 device,
+                 gameprice.price.get_last_date_to_claim()
+                 )
     else:
         max_days_to_claim = getattr(settings, 'EUROKU_MAX_DAYS_TO_CLAIM', 10)
         data_dict['last_day_to_claim'] = _json_serializable_datetime(
