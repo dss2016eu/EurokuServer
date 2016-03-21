@@ -4,8 +4,9 @@ import datetime
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 
-from eurokuserver.control.models import Device, ControlPanel
+from eurokuserver.control.models import Device, ControlPanel, INFOPOINT
 from eurokuserver.game.models import Game
+
 
 def _json_serializable_datetime(device, date):
     if date is None:
@@ -20,6 +21,8 @@ def _json_serializable_datetime(device, date):
             '%Y-%m-%d',
             )
         )
+
+
 def _cors_response(response=None):
     if response is None:
         response = HttpResponse()
@@ -28,13 +31,16 @@ def _cors_response(response=None):
     response['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
+
 def _error_response(msg):
     response = JsonResponse({'error': True, 'message': msg})
     return _cors_response(response)
 
+
 def _correct_response(data_dict):
     response = JsonResponse(data_dict, safe=False)
     return _cors_response(response)
+
 
 def _get_game_from_request(request, device):
     game = None
@@ -43,7 +49,7 @@ def _get_game_from_request(request, device):
         game_id = request.GET.get('game_id')
     if request.method == 'POST':
         data = json.loads(request.body)
-        game_id = data.get('game_id')        
+        game_id = data.get('game_id')
     if game_id is None:
         if request.method == 'GET':
             cp = ControlPanel.objects.all()[0]
@@ -60,6 +66,7 @@ def _get_game_from_request(request, device):
         msg = u'Closed game'
     return (game, msg)
 
+
 def _get_device_from_request(request):
     device = None
     msg = ''
@@ -69,7 +76,7 @@ def _get_device_from_request(request):
         data = json.loads(request.body)
         device_id = data.get('device_id')
     else:
-        device_id = None 
+        device_id = None
     if device_id is None:
         msg = u'No device_id on request'
     else:
@@ -93,11 +100,16 @@ def _create_price_dict(price, device=None):
             'amount': price.available,
             'enddate': price.valid_until}
 
+
 def _create_userprice_dict(gameprice):
     device = gameprice.device
     data_dict = _create_price_dict(gameprice.price, device)
     data_dict['key'] = gameprice.key
     data_dict['claimed'] = gameprice.claimed
+    lang = device.language
+    data_dict['html'] = INFOPOINT[lang]
+    data_dict['latlong'] = INFOPOINT['latlong']
+
     if gameprice.price.event is True:
         data_dict['last_day_to_claim'] = _json_serializable_datetime(
                  device,
