@@ -9,7 +9,6 @@ LANGUAGES = (('es', 'Español'),
 INFOPOINT_DESC_TEMPLATE = u"""\
 <p>
 <br/>
-<br/>
 <b>{0}</b>
 <br/>{1}
 <br/>{2}</p>
