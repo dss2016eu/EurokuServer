@@ -80,6 +80,7 @@ def _get_device_from_request(request):
             msg = u'No device registered whit this id'
     return (device, msg)
 
+
 def _create_price_dict(price, device=None):
     if device is not None:
         lang = device.language

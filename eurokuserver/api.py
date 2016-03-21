@@ -7,25 +7,29 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_control
 
-from .apiutils import _error_response, _get_device_from_request, _correct_response, _get_game_from_request, _cors_response
+from .apiutils import (_error_response, _get_device_from_request,
+                       _correct_response, _get_game_from_request,
+                       _cors_response)
 from .apiutils import _create_userprice_dict, _create_price_dict
 from .game.models import Question, GameQuestionStatus
 from .price.models import DevicePrice, Price
 from .price.utils import get_price
 from .control.models import Device
+from .control.models import INFOPOINT
+
 
 @cache_control(private=True)
 @csrf_exempt
 def question(request):
     """
     .. http:get:: /galdera
-    
+
         Galdera berri bat eskatu
 
         **Erantzuna**:
 
         .. sourcecode:: http
-    
+
             HTTP/1.1 200 OK
             Vary: Accept
             Content-Type: text/javascript
@@ -39,12 +43,12 @@ def question(request):
              "round": 1,
              "rounds": 16,
              }
-                
+
         :query device_id: Gailuaren tokena
         :query game_id: Partida identifikadorea. Aukerakoa, ez bada bidaltzen partida berri bat hasiko da
-        
+
     .. http:post:: /galdera
-    
+
         Galdera baten erantzuna bidali
 
         **Erantzuna**:
@@ -136,7 +140,8 @@ def question(request):
             return _correct_response(return_dict)
         else:
             return _error_response(u'No matching question')
-        
+
+
 @cache_control(private=True)
 def prices(request):
     """ All user prices """
@@ -145,6 +150,7 @@ def prices(request):
         return _error_response(message)
     prices = DevicePrice.objects.filter(device=device)
     return _correct_response(map(_create_userprice_dict, prices))
+
 
 @cache_control(private=True)
 def price(request, price_key):
@@ -158,7 +164,12 @@ def price(request, price_key):
         return _error_response(u'No price with this code for this device')
     else:
         price = price.first()
-    return _correct_response(_create_userprice_dict(price))
+    price_data = _create_userprice_dict(price)
+    lang = device.language
+    price_data['html'] = INFOPOINT[lang]
+    price_data['latlong'] = INFOPOINT['latlong']
+    return _correct_response(price_data)
+
 
 @cache_control(private=True)
 def publicprices(request):
@@ -168,6 +179,7 @@ def publicprices(request):
         return _error_response(message)
     prices = Price.objects.get_available()
     return _correct_response([_create_price_dict(p, device) for p in prices])
+
 
 @cache_control(private=True)
 @csrf_exempt
@@ -180,7 +192,7 @@ def profile(request):
        **Erantzuna**:
 
        .. sourcecode:: http
-       
+
             HTTP/1.1 200 OK
             Vary: Accept
             Content-Type: text/javascript
@@ -191,7 +203,7 @@ def profile(request):
             }
 
        :query device_id: Gailuaren identifikadore tokena
-        
+
     .. http:post:: /api/1.0/profile
 
        Gailuaren hobespenak aldatu
