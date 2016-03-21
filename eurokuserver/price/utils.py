@@ -21,6 +21,7 @@ def get_price(device):
     if events.exists():
         price = events.first()
     else:
+        prices = prices.order_by('?')
         price = prices.first()
     price.available -= 1
     price.save()
