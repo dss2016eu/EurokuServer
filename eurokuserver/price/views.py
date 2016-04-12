@@ -14,14 +14,14 @@ def search(request):
         if dp.exists():
             dp = dp.first()
             price = dp.price
-            view_message = 'SARIA: {0}'.format(price.title_eu)
+            view_message = u'SARIA: {0}'.format(price.title_eu)
             if claim == u'on':
                 dp.claimed = True
                 dp.save()
-                view_message = 'Sari esleipena ondo bukatu da'
+                view_message = u'Sari esleipena ondo bukatu da'
                 claim_checkbox = False
                 price_key = None
         else:
-            alert_message = "Gako horri dagokion banatu gabeko saririk ez dago"
+            alert_message = u"Gako horri dagokion banatu gabeko saririk ez dago"
             claim_checkbox = False
     return render(request, 'sariak.html', context=locals())
