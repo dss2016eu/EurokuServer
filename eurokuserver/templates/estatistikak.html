@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block headtitle %}Estatistikak{% endblock %}
 {% block heading %}Euroku estatistikak{% endblock %}
 {% block extrajshead %}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -60,7 +61,6 @@ var data = new google.visualization.DataTable();
       <div class="col-md-2">
         <div class="panel-body">
           <strong>Guztira:</strong> {{partidak.count}}
-          <strong>Jokoan:</strong> {{partidak_irekita.count}}
         </div>
       </div>
       <div class="col-md-10">
@@ -88,7 +88,7 @@ var data = new google.visualization.DataTable();
       <div class="col-md-2">
         <div class="panel-body">
           <strong>Zerbitzatutako galderak:</strong> {{erantzunak.count}}
-          <strong>Zuzen erantzundakoak:</strong> {{zuzenak.conunt}}
+          <strong>Zuzen erantzundakoak:</strong> {{zuzenak.count}}
         </div>
       </div>
   </div>
