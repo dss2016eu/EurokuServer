@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block heading %}Euroku estatistikak{% endblock %}
+{% block extrajshead %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {packages: ['corechart']});
+  google.charts.setOnLoadCallback(drawGamesChart);
+  google.charts.setOnLoadCallback(drawPricesChart);
+  
+function drawGamesChart(){
+var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Eguna');
+    data.addColumn('number', 'Partidak');
+    data.addRows([
+    {% for day in partidak_eguneko %}
+	["{{ day.date_start|date:"Y-m-d" }}", {{day.count}}],
+    {% endfor %}
+    ]);
+    var options = {
+	title: 'Jokatutako partidak',
+	hAxis: {
+	    title: 'Eguna'
+	},
+	vAxis: {
+	    title: 'Kopurua'
+	},
+    }
+    var chart = new google.visualization.LineChart(document.getElementById('games-graph'));
+    chart.draw(data, options)
+}
+function drawPricesChart(){
+var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Eguna');
+    data.addColumn('number', 'Sariak');
+    data.addRows([
+    {% for day in emandako_sariak_eguneko %}
+	["{{ day.date|date:"Y-m-d" }}", {{day.count}}],
+    {% endfor %}
+    ]);
+    var options = {
+	title: 'Lortutako sariak',
+	hAxis: {
+	    title: 'Eguna'
+	},
+	vAxis: {
+	    title: 'Kopurua'
+	},
+    }
+    var chart = new google.visualization.LineChart(document.getElementById('prices-graph'));
+    chart.draw(data, options)
+}
+</script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    
+    <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">Partidak</h2></div>
+      <div class="col-md-2">
+        <div class="panel-body">
+          <strong>Guztira:</strong> {{partidak.count}}
+          <strong>Jokoan:</strong> {{partidak_irekita.count}}
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div id="games-graph"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">Sariak</h2></div>
+      <div class="col-md-2">
+        <div class="panel-body">
+          <strong>Guztira:</strong> {{sariak.count}}
+          <strong>Jasotakoak:</strong> {{jasotakoak.count}}
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div id="prices-graph"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+        <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">Galderak</h2></div>
+      <div class="col-md-2">
+        <div class="panel-body">
+          <strong>Zerbitzatutako galderak:</strong> {{erantzunak.count}}
+          <strong>Zuzen erantzundakoak:</strong> {{zuzenak.conunt}}
+        </div>
+      </div>
+  </div>
+</div>
+  
+{% endblock %}

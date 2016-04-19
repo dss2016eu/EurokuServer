@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^api/1.0/profile', api.profile, name="euroku_profile"),
     url(r'^api/1.0/register', api.register, name="euroku_register"),
     url(r'^sariak', price_views.search, name="euroku_search"),
+    url(r'^estatistikak', control_views.estatistikak, name="euroku_estatistikak"),
     url(r'^login', control_views.login, {"template_name": "login.html"}, name="euroku_login"),
     url(r'^admin/load_questions$', control_views.add_questions, name="euroku_add_questions"),
     url(r'^admin/', include(admin.site.urls)),

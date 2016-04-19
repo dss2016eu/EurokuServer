@@ -2,8 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth import login as d_login, authenticate
 from django.http import HttpResponseRedirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Count
+
 from .unicodecsvreader import UnicodeReader
-from eurokuserver.game.models import Question
+from eurokuserver.game.models import Question, Game, GameQuestionStatus
+from eurokuserver.price.models import DevicePrice
 from eurokuserver.game.management.commands.load_csv_questions import get_photo_from_url
 
 # Create your views here.
@@ -55,8 +58,24 @@ def add_questions(request):
                             q.photo = photo
                     else:
                         q.attribution = extra_data
-                    q.save()
+                    q.save() 
                 view_message = u'Karga bukatu da. {0} galdera gehitu dira'.format(kont)
             kont += 1
     return render(request, 'admin/load_csv_questions.html', locals())
-        
+
+@staff_member_required
+def estatistikak(request):
+    partidak = Game.objects.all()
+    partidak_irekita = partidak.filter(active=True)
+    sariak = DevicePrice.objects.all()
+    jasotakoak = sariak.filter(claimed=True)
+    erantzunak = GameQuestionStatus.objects.all()
+    zuzenak = erantzunak.filter(correct=True)
+    partidak_eguneko = partidak.extra({'date_start': "date(start_date)"})\
+                               .values('date_start')\
+                               .annotate(count=Count('pk'))
+    emandako_sariak_eguneko = sariak.extra({'date': "date(added)"})\
+                                    .values('date')\
+                                    .annotate(count=Count('pk'))
+
+    return render(request, 'estatistikak.html', locals())
