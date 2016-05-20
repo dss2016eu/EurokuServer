@@ -4,6 +4,7 @@ import datetime
 
 from django.conf import settings
 from .models import Price, DevicePrice
+from eurokuserver.control.models import ControlPanel
 
 KEY_LENGTH = getattr(settings, 'EUROKU_PRICE_KEY_LENGTH', 8)
 
@@ -29,4 +30,7 @@ def get_price(device):
     deviceprice = DevicePrice.objects.create(device=device,
                                              price=price,
                                              key=key)
+    cp = ControlPanel.objects.all()[0]
+    cp.difficulty = cp.difficulty + 2
+    cp.save()
     return deviceprice
