@@ -31,6 +31,5 @@ urlpatterns = [
     url(r'^estatistikak', control_views.estatistikak, name="euroku_estatistikak"),
     url(r'^login', control_views.login, {"template_name": "login.html"}, name="euroku_login"),
     url(r'^admin/load_questions$', control_views.add_questions, name="euroku_add_questions"),
-    url(r'^admin/', include(admin.site.urls),
-    url(r'^.well-known/acme-challenge/eM_MPYjuwrXRuIhNl0HxJJl4Qii1kMwzM-gyvr8kVbw$', api.prices)),
+    url(r'^admin/', include(admin.site.urls)),
 ]
