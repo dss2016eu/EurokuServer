@@ -77,5 +77,7 @@ def estatistikak(request):
     emandako_sariak_eguneko = sariak.extra({'date': "date(added)"})\
                                     .values('date')\
                                     .annotate(count=Count('pk'))
-
+    erabiltzaile_bakarrak_eguneko = partidak.extra({'date_start': "date(start_date)"})\
+                                    .values('date_start')\
+                                    .annotate(count=Count('device', distinct=True))
     return render(request, 'estatistikak.html', locals())
