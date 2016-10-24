@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 import uuid
+import datetime
+
 
 LANGUAGES = (('es', 'Español'),
              ('eu', 'Euskara'),
@@ -27,8 +29,34 @@ INFOPOINT = {'eu': INFOPOINT_DESC_TEMPLATE.format(u'2016 Gunea',
 
 # Create your models here.
 class ControlPanel(models.Model):
-    difficulty = models.SmallIntegerField()
+    difficulty_max = models.SmallIntegerField()
+    difficulty_min = models.SmallIntegerField()
+    zenbat_egunez_saria = models.SmallIntegerField(default=30)
+    zenbat_egunez_partidak = models.SmallIntegerField(default=30)
+    partida_kopurua_max = models.SmallIntegerField(default=100)
+    partida_kopurua_min = models.SmallIntegerField(default=10)
+    
+    def get_difficulty_for_device(self, device):
+        from eurokuserver.price.models import DevicePrice
+        from eurokuserver.game.models import Game
+        price_limit = datetime.date.today() - datetime.timedelta(self.zenbat_egunez_saria)
+        games_limit = datetime.date.today() - datetime.timedelta(self.zenbat_egunez_partidak)
+        device_games = Game.objects.filter(device=device, start_date__gte=games_limit)
+        last_price = DevicePrice.objects.filter(device=device, added__gte=price_limit)
 
+        difficulty = 0
+        
+        if last_price.count() > 0:
+            difficulty = self.difficulty_max
+        else:
+            if device_games.count() <= self.partida_kopurua_min:
+                difficulty = self.difficulty_min
+            elif device_games.count() >= self.partida_kopurua_max:
+                difficulty = self.difficulty_max
+            else:
+                partida_kop = device_games.count()
+                difficulty = self.difficulty_min + int((partida_kop - self.partida_kopurua_min) * (self.difficulty_max - self.difficulty_min) / (self.partida_kopurua_max - self.partida_kopurua_min))
+        return difficulty
 
 class DeviceManager(models.Manager):
     def new(self, language):

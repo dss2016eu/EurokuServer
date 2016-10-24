@@ -31,6 +31,6 @@ def get_price(device):
                                              price=price,
                                              key=key)
     cp = ControlPanel.objects.all()[0]
-    cp.difficulty = cp.difficulty + 2
+    cp.difficulty = cp.difficulty_max + 2
     cp.save()
     return deviceprice

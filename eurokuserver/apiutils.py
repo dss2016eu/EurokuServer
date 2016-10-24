@@ -53,7 +53,7 @@ def _get_game_from_request(request, device):
     if game_id is None:
         if request.method == 'GET':
             cp = ControlPanel.objects.all()[0]
-            game = Game.objects.create(points_to_win=cp.difficulty,
+            game = Game.objects.create(points_to_win=cp.get_difficulty_for_device(device=device),
                                        device=device)
         else:
             msg = u'No game_id on request'
