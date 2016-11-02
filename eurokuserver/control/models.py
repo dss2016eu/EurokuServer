@@ -44,7 +44,7 @@ class ControlPanel(models.Model):
         device_games = Game.objects.filter(device=device, start_date__gte=games_limit)
         last_price = DevicePrice.objects.filter(device=device, added__gte=price_limit)
 
-        difficulty = 0
+        difficulty = self.difficulty_min
         
         if last_price.count() > 0:
             difficulty = self.difficulty_max
