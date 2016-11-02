@@ -65,3 +65,9 @@ class ControlTest(TestCase):
         dp.save()
         self.assertEqual(self.cp.difficulty_min,
                          self.cp.get_difficulty_for_device(self.device))
+
+    def test_device_gets_min_difficulty_when_max_and_min_are_equal(self):
+        self.cp.difficulty_max = self.cp.difficulty_min
+        self.assertEqual(self.cp.difficulty_min,
+                         self.cp.get_difficulty_for_device(self.device))
+        
