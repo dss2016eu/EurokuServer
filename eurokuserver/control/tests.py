@@ -30,44 +30,17 @@ class ControlTest(TestCase):
         self.assertEqual(self.cp.difficulty_min,
                          self.cp.get_difficulty_for_device(self.device))
         
-    def test_device_under_minimal_games_count_gets_minimal_difficulty(self):
-        for i in range(self.cp.partida_kopurua_min - 1):
-            Game.objects.create(points_to_win=10, device=self.device)
+    def test_device_without_price_gets_minimal_difficulty(self):
+        for g in range(10):
+            Game.objects.create(device=self.device,
+                                points_to_win=10)
         self.assertEqual(self.cp.difficulty_min,
                          self.cp.get_difficulty_for_device(self.device))
         
-    def test_device_over_max_games_count_gets_max_difficulty(self):
-        for i in range(self.cp.partida_kopurua_max + 1):
-            Game.objects.create(points_to_win=10, device=self.device)
-        self.assertEqual(self.cp.difficulty_max,
-                         self.cp.get_difficulty_for_device(self.device))
-
-    def test_device_over_min_games_count_gets_greater_difficulty_than_min(self):
-        for i in range(self.cp.partida_kopurua_min + 1):
-            Game.objects.create(points_to_win=10, device=self.device)
-        self.assertGreaterEqual(self.cp.get_difficulty_for_device(self.device),
-                                self.cp.difficulty_min)
-
-    def test_device_under_max_games_count_gets_smaller_difficulty_than_max(self):
-        for i in range(self.cp.partida_kopurua_max - 1):
-            Game.objects.create(points_to_win=10, device=self.device)
-        self.assertLessEqual(self.cp.get_difficulty_for_device(self.device),
-                             self.cp.difficulty_max)
-
-    def test_device_with_a_price_gets_max_difficulty(self):
-        get_price(self.device)
-        self.assertEqual(self.cp.difficulty_max,
-                         self.cp.get_difficulty_for_device(self.device))
-
-    def test_device_with_old_price_gets_min_diffyculty(self):
-        dp = get_price(self.device)
-        dp.added = dp.added - (datetime.timedelta(self.cp.zenbat_egunez_saria + 1))
-        dp.save()
+    def test_device_without_price_in_period_get_minimal_dififculty(self):
+        p = get_price(self.device)
+        days_off_period = datetime.timedelta(days=self.cp.zenbat_egunez_saria + 1)
+        p.added = p.added - days_off_period
+        p.save()
         self.assertEqual(self.cp.difficulty_min,
                          self.cp.get_difficulty_for_device(self.device))
-
-    def test_device_gets_min_difficulty_when_max_and_min_are_equal(self):
-        self.cp.difficulty_max = self.cp.difficulty_min
-        self.assertEqual(self.cp.difficulty_min,
-                         self.cp.get_difficulty_for_device(self.device))
-        

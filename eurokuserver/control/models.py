@@ -32,30 +32,18 @@ class ControlPanel(models.Model):
     difficulty_max = models.SmallIntegerField()
     difficulty_min = models.SmallIntegerField()
     zenbat_egunez_saria = models.SmallIntegerField(default=30)
-    zenbat_egunez_partidak = models.SmallIntegerField(default=30)
-    partida_kopurua_max = models.SmallIntegerField(default=100)
-    partida_kopurua_min = models.SmallIntegerField(default=10)
+    sari_kopurua_max = models.SmallIntegerField(default=100)
+
     
     def get_difficulty_for_device(self, device):
         from eurokuserver.price.models import DevicePrice
         from eurokuserver.game.models import Game
         price_limit = datetime.date.today() - datetime.timedelta(self.zenbat_egunez_saria)
-        games_limit = datetime.date.today() - datetime.timedelta(self.zenbat_egunez_partidak)
-        device_games = Game.objects.filter(device=device, start_date__gte=games_limit)
-        last_price = DevicePrice.objects.filter(device=device, added__gte=price_limit)
+        price_in_period = DevicePrice.objects.filter(device=device, added__gte=price_limit)
 
         difficulty = self.difficulty_min
-        
-        if last_price.count() > 0:
-            difficulty = self.difficulty_max
-        else:
-            if device_games.count() <= self.partida_kopurua_min:
-                difficulty = self.difficulty_min
-            elif device_games.count() >= self.partida_kopurua_max:
-                difficulty = self.difficulty_max
-            else:
-                partida_kop = device_games.count()
-                difficulty = self.difficulty_min + int((partida_kop - self.partida_kopurua_min) * (self.difficulty_max - self.difficulty_min) / (self.partida_kopurua_max - self.partida_kopurua_min))
+        price_count = price_in_period.count()
+        difficulty = self.difficulty_min + (price_count * (self.difficulty_max - self.difficulty_min) / self.sari_kopurua_max)
         return difficulty
 
 class DeviceManager(models.Manager):
