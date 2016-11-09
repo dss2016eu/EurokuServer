@@ -37,13 +37,13 @@ class ControlPanel(models.Model):
     
     def get_difficulty_for_device(self, device):
         from eurokuserver.price.models import DevicePrice
-        from eurokuserver.game.models import Game
         price_limit = datetime.date.today() - datetime.timedelta(self.zenbat_egunez_saria)
         price_in_period = DevicePrice.objects.filter(device=device, added__gte=price_limit)
 
         difficulty = self.difficulty_min
         price_count = price_in_period.count()
-        difficulty = self.difficulty_min + (price_count * (self.difficulty_max - self.difficulty_min) / self.sari_kopurua_max)
+        if self.sari_kopurua_max > 0:
+            difficulty = self.difficulty_min + (price_count * (self.difficulty_max - self.difficulty_min) / self.sari_kopurua_max)
         return difficulty
 
 class DeviceManager(models.Manager):

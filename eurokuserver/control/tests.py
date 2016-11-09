@@ -44,3 +44,22 @@ class ControlTest(TestCase):
         p.save()
         self.assertEqual(self.cp.difficulty_min,
                          self.cp.get_difficulty_for_device(self.device))
+
+    def test_device_with_prices_over_max_gets_max_dificulty(self):
+        for i in range(self.cp.sari_kopurua_max + 1):
+            p = get_price(self.device)
+        self.assertTrue(self.cp.difficulty_max,
+                        self.cp.get_difficulty_for_device(self.device))
+
+    def test_device_with_prices_under_max_get_diffyculty_between_max_and_min(self):
+        for i in range(self.cp.sari_kopurua_max - 1):
+            p = get_price(self.device)
+        difficulty = self.cp.get_difficulty_for_device(self.device)
+        self.assertGreater(difficulty, self.cp.difficulty_min)
+        self.assertLess(difficulty, self.cp.difficulty_max)
+
+    def test_difficulty_is_min_when_max_prices_count_is_zero(self):
+        self.cp.sari_kopurua_max = 0
+        self.cp.save()
+        self.assertEqual(self.cp.difficulty_min,
+                         self.cp.get_difficulty_for_device(self.device))
